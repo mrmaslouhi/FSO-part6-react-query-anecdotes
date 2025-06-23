@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { postNewAnecdote } from '../requests'
 
-const AnecdoteForm = () => {
+const AnecdoteForm = ({ notificationDispatch }) => {
   const queryClient = useQueryClient()
 
   const newAnecdoteMutation = useMutation({
@@ -16,15 +16,18 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
-    console.log('new anecdote')
+    notificationDispatch({ type: 'SET_MESSAGE', payload: `Added ${content}`})
+    setTimeout(() => {
+      notificationDispatch({ type: 'SET_MESSAGE', payload: null})
+    }, 5000)
 }
 
   return (
     <div>
-      <h3>create new</h3>
+      <h3>post new</h3>
       <form onSubmit={onCreate}>
         <input name='anecdote' />
-        <button type="submit">create</button>
+        <button type="submit">post</button>
       </form>
     </div>
   )

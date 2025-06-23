@@ -1,4 +1,4 @@
-const Notification = () => {
+const Notification = ({ notification }) => {
   const style = {
     border: 'solid',
     padding: 10,
@@ -6,13 +6,17 @@ const Notification = () => {
     marginBottom: 5
   }
   
-  if (true) return null
-
-  return (
+  if (notification) {
+    return (
     <div style={style}>
-      
+      {notification}
     </div>
   )
+  } else {
+    return ''
+  }
+
+
 }
 
 export default Notification
