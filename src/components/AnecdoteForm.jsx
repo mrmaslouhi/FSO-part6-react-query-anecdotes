@@ -7,25 +7,31 @@ const AnecdoteForm = ({ notificationDispatch }) => {
   const newAnecdoteMutation = useMutation({
     mutationFn: postNewAnecdote,
     onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+      queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+      notificationDispatch({ type: 'SET_MESSAGE', payload: `Added ${content}` })
+      setTimeout(() => {
+        notificationDispatch({ type: 'SET_MESSAGE', payload: null })
+      }, 5000)
+    },
+    onError: (error) => {
+      notificationDispatch({ type: 'SET_MESSAGE', payload: 'error, anecdote must contain 5 or more characters' })
+      setTimeout(() => {
+        notificationDispatch({ type: 'SET_MESSAGE', payload: null })
+      }, 5000)
     }
   })
 
-  const onCreate = (event) => {
+  const onPost = (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: 0 })
-    notificationDispatch({ type: 'SET_MESSAGE', payload: `Added ${content}`})
-    setTimeout(() => {
-      notificationDispatch({ type: 'SET_MESSAGE', payload: null})
-    }, 5000)
-}
+  }
 
   return (
     <div>
       <h3>post new</h3>
-      <form onSubmit={onCreate}>
+      <form onSubmit={onPost}>
         <input name='anecdote' />
         <button type="submit">post</button>
       </form>
